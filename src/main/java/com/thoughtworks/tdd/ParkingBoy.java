@@ -1,21 +1,25 @@
 package com.thoughtworks.tdd;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.thoughtworks.tdd.Constant.NO_TICKET;
 import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 
 public class ParkingBoy {
-  private ParkingLot parkingLot;
+  private List<ParkingLot> parkingLotList;
 
   public Response park(Car car) {
-    if (parkingLot.isFull()) {
+    parkingLotList = parkingLotList.stream().filter(x -> !x.isFull()).collect(Collectors.toList());
+    if (parkingLotList.size() == 0) {
       return new Response(PARKING_LOT_IS_FULL, null);
     }
-    if (parkingLot.getMap().containsValue(car) || car == null) {
+    if (parkingLotList.get(0).getMap().containsValue(car) || car == null) {
       return new Response("", null);
     }
     ParkingTicket ticket = new ParkingTicket();
-    parkingLot.getMap().put(ticket, car);
+    parkingLotList.get(0).getMap().put(ticket, car);
     return new Response("", ticket);
   }
 
@@ -23,15 +27,21 @@ public class ParkingBoy {
     if (ticket == null) {
       return new Response(NO_TICKET, null);
     }
-    Car car = parkingLot.getMap().get(ticket);
-    parkingLot.getMap().remove(ticket);
+    Car car = null;
+    for (ParkingLot lot : parkingLotList) {
+      if (lot.getMap().containsKey(ticket)) {
+        car = lot.getMap().get(ticket);
+        lot.getMap().remove(ticket);
+      }
+    }
     if (car == null) {
       return new Response(WRONG_TICKET, null);
     }
     return new Response("", car);
   }
 
-  public void setParkingLot(ParkingLot parkingLot) {
-    this.parkingLot = parkingLot;
+  public void setParkingLotList(List<ParkingLot> parkingLotList) {
+    this.parkingLotList = parkingLotList;
   }
+
 }
