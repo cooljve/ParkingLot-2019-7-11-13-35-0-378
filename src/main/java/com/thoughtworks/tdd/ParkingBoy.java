@@ -1,5 +1,7 @@
 package com.thoughtworks.tdd;
 
+import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
+
 public class ParkingBoy {
   private ParkingLot parkingLot;
 
@@ -12,10 +14,13 @@ public class ParkingBoy {
     return ticket;
   }
 
-  public Car fetch(ParkingTicket ticket) {
+  public Response fetch(ParkingTicket ticket) {
     Car car = parkingLot.getMap().get(ticket);
     parkingLot.getMap().remove(ticket);
-    return car;
+    if (car == null) {
+      return new Response(WRONG_TICKET,null);
+    }
+    return new Response("",car);
   }
 
   public void setParkingLot(ParkingLot parkingLot) {

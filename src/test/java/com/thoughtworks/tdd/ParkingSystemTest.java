@@ -2,6 +2,7 @@ package com.thoughtworks.tdd;
 
 import org.junit.jupiter.api.Test;
 
+import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,9 +18,9 @@ class ParkingSystemTest {
     //when
     parkingBoy.setParkingLot(parkingLot);
     ParkingTicket ticket = parkingBoy.park(car);
-    Car fetchedCar = parkingBoy.fetch(ticket);
+    Response response = parkingBoy.fetch(ticket);
     //then
-    assertEquals(car, fetchedCar);
+    assertEquals(car, response.getObject());
   }
 
   @Test
@@ -33,11 +34,11 @@ class ParkingSystemTest {
     parkingBoy.setParkingLot(parkingLot);
     ParkingTicket ticket = parkingBoy.park(firstCar);
     ParkingTicket ticket1 = parkingBoy.park(secondCar);
-    Car fetchedCar = parkingBoy.fetch(ticket);
-    Car fetchedCar1 = parkingBoy.fetch(ticket1);
+    Response response = parkingBoy.fetch(ticket);
+    Response response1 = parkingBoy.fetch(ticket1);
     //then
-    assertEquals(firstCar, fetchedCar);
-    assertEquals(secondCar, fetchedCar1);
+    assertEquals(firstCar, response.getObject());
+    assertEquals(secondCar, response1.getObject());
   }
 
   @Test
@@ -49,11 +50,11 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    Car fetchedCar = parkingBoy.fetch(customer.getParkingTicket());
-    Car fetchedCar1 = parkingBoy.fetch(null);
+    Response response = parkingBoy.fetch(customer.getParkingTicket());
+    Response response1 = parkingBoy.fetch(null);
     //then
-    assertEquals(null, fetchedCar);
-    assertEquals(null, fetchedCar1);
+    assertEquals(null, response.getObject());
+    assertEquals(null, response1.getObject());
   }
 
   @Test
@@ -67,11 +68,11 @@ class ParkingSystemTest {
     parkingBoy.setParkingLot(parkingLot);
     ParkingTicket ticket = parkingBoy.park(customer.getCar());
     customer.setParkingTicket(ticket);
-    Car fetchedCar = parkingBoy.fetch(customer.getParkingTicket());
-    Car fetchedCar1 = parkingBoy.fetch(customer.getParkingTicket());
+    Response response = parkingBoy.fetch(customer.getParkingTicket());
+    Response response1 = parkingBoy.fetch(customer.getParkingTicket());
     //then
-    assertEquals(customer.getCar(), fetchedCar);
-    assertEquals(null, fetchedCar1);
+    assertEquals(customer.getCar(), response.getObject());
+    assertEquals(null, response1.getObject());
   }
 
   @Test
@@ -116,6 +117,23 @@ class ParkingSystemTest {
     ParkingTicket ticket = parkingBoy.park(customer.getCar());
     //then
     assertEquals(null, ticket);
+  }
+
+  @Test
+  public void should_return_error_string_when_fetch_car_give_used_ticket() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot = new ParkingLot(10);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    customer.setParkingTicket(ticket);
+    parkingBoy.fetch(customer.getParkingTicket());
+    Response response1 = parkingBoy.fetch(customer.getParkingTicket());
+    //then
+    assertEquals(WRONG_TICKET, response1.getMessage());
   }
 
 }
