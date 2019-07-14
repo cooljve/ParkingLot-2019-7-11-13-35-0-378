@@ -2,7 +2,7 @@ package com.thoughtworks.tdd;
 
 import java.util.List;
 
-public class Manager implements ParkingSystem{
+public class Manager extends ParkingBoy {
   private List<ParkingBoy> parkingBoyList;
   private List<ParkingLot> parkingLotList;
 
@@ -29,21 +29,15 @@ public class Manager implements ParkingSystem{
     this.parkingBoyList = parkingBoyList;
   }
 
+  public Response park(Car car){
+    return super.park(car);
+  }
+
   public List<ParkingLot> getParkingLotList() {
     return parkingLotList;
   }
 
   public void setParkingLotList(List<ParkingLot> parkingLotList) {
     this.parkingLotList = parkingLotList;
-  }
-
-  @Override
-  public Response park(Car car) {
-    return null;
-  }
-
-  @Override
-  public Response fetch(ParkingTicket ticket) {
-    return null;
   }
 }

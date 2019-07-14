@@ -7,19 +7,19 @@ import static com.thoughtworks.tdd.Constant.NO_TICKET;
 import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 
-public class ParkingBoy implements ParkingSystem{
+public class ParkingBoy {
   private List<ParkingLot> parkingLotList;
 
   public Response park(Car car) {
-    parkingLotList = parkingLotList.stream().filter(x -> !x.isFull()).collect(Collectors.toList());
-    if (parkingLotList.size() == 0) {
+    setParkingLotList(getParkingLotList().stream().filter(x -> !x.isFull()).collect(Collectors.toList()));
+    if (getParkingLotList().size() == 0) {
       return new Response(PARKING_LOT_IS_FULL, null);
     }
-    if (parkingLotList.get(0).getMap().containsValue(car) || car == null) {
+    if (getParkingLotList().get(0).getMap().containsValue(car) || car == null) {
       return new Response("", null);
     }
     ParkingTicket ticket = new ParkingTicket();
-    parkingLotList.get(0).getMap().put(ticket, car);
+    getParkingLotList().get(0).getMap().put(ticket, car);
     return new Response("", ticket);
   }
 
@@ -28,7 +28,7 @@ public class ParkingBoy implements ParkingSystem{
       return new Response(NO_TICKET, null);
     }
     Car car = null;
-    for (ParkingLot lot : parkingLotList) {
+    for (ParkingLot lot : getParkingLotList()) {
       if (lot.getMap().containsKey(ticket)) {
         car = lot.getMap().get(ticket);
         lot.getMap().remove(ticket);

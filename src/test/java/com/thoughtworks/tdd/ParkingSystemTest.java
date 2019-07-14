@@ -309,6 +309,33 @@ class ParkingSystemTest {
     assertNotNull(response1.getObject());
   }
 
+  @Test
+  public void should_return_car_when_distribute_manager_park_and_fetch_same_car_give_customer_and_manager() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    List<ParkingLot> parkingLotList = expectParkingLotListByCount(4);
+    Manager manager = new Manager(parkingLotList);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    SmartParkingBoy smartParkingBoy = new SmartParkingBoy();
+    SuperSmartParkingBoy superSmartParkingBoy = new SuperSmartParkingBoy();
+    List<ParkingBoy> parkingBoyList = new ArrayList<>();
+    parkingBoyList.add(parkingBoy);
+    parkingBoyList.add(smartParkingBoy);
+    parkingBoyList.add(superSmartParkingBoy);
+    manager.setParkingBoyList(parkingBoyList);
+    manager.distribute(parkingBoy, parkingLotList.subList(0, 1));
+    manager.distribute(smartParkingBoy, parkingLotList.subList(1, 2));
+    manager.distribute(superSmartParkingBoy, parkingLotList.subList(2, 3));
+    //when
+    Response response = manager.distributeParkingBoyToPark(manager, customer);
+    customer.setParkingTicket((ParkingTicket) response.getObject());
+    Response response1 = manager.distributeParkingBoyToFetch(manager, customer);
+    //then
+    assertNotNull(response.getObject());
+    assertNotNull(response1.getObject());
+  }
+
   private List<ParkingLot> expectParkingLotListByCount(int count) {
     List<ParkingLot> parkingLotList = new ArrayList<>();
     for (int i = count; i > 0; i--) {
