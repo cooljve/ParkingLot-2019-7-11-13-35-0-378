@@ -90,4 +90,32 @@ class ParkingSystemTest {
     assertEquals(null, customer.getParkingTicket());
   }
 
+  @Test
+  public void should_return_null_ticket_when_park_car_give_parkedCar() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot = new ParkingLot(10);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    parkingBoy.park(customer.getCar());
+    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    //then
+    assertEquals(null, ticket);
+  }
+
+  @Test
+  public void should_return_null_ticket_when_park_car_give_null_car() {
+    //give
+    Customer customer = new Customer();
+    ParkingLot parkingLot = new ParkingLot(10);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    //then
+    assertEquals(null, ticket);
+  }
+
 }

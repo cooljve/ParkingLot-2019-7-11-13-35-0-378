@@ -4,7 +4,7 @@ public class ParkingBoy {
   private ParkingLot parkingLot;
 
   public ParkingTicket park(Car car) {
-    if (parkingLot.isFull()) {
+    if (parkingLot.isFull() || parkingLot.getMap().containsValue(car) || car == null) {
       return null;
     }
     ParkingTicket ticket = new ParkingTicket();
