@@ -3,6 +3,7 @@ package com.thoughtworks.tdd;
 import org.junit.jupiter.api.Test;
 
 import static com.thoughtworks.tdd.Constant.NO_TICKET;
+import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -18,10 +19,10 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    ParkingTicket ticket = parkingBoy.park(car);
-    Response response = parkingBoy.fetch(ticket);
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(car).getObject();
+    Car fetchedCar = (Car) parkingBoy.fetch(ticket).getObject();
     //then
-    assertEquals(car, response.getObject());
+    assertEquals(car, fetchedCar);
   }
 
   @Test
@@ -33,13 +34,13 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    ParkingTicket ticket = parkingBoy.park(firstCar);
-    ParkingTicket ticket1 = parkingBoy.park(secondCar);
-    Response response = parkingBoy.fetch(ticket);
-    Response response1 = parkingBoy.fetch(ticket1);
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(firstCar).getObject();
+    ParkingTicket ticket1 = (ParkingTicket) parkingBoy.park(secondCar).getObject();
+    Car fetchedCar = (Car) parkingBoy.fetch(ticket).getObject();
+    Car fetchedCar1 = (Car) parkingBoy.fetch(ticket1).getObject();
     //then
-    assertEquals(firstCar, response.getObject());
-    assertEquals(secondCar, response1.getObject());
+    assertEquals(firstCar, fetchedCar);
+    assertEquals(secondCar, fetchedCar1);
   }
 
   @Test
@@ -51,11 +52,11 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    Response response = parkingBoy.fetch(customer.getParkingTicket());
-    Response response1 = parkingBoy.fetch(null);
+    Car fetchedCar = (Car) parkingBoy.fetch(customer.getParkingTicket()).getObject();
+    Car fetchedCar1 = (Car) parkingBoy.fetch(null).getObject();
     //then
-    assertEquals(null, response.getObject());
-    assertEquals(null, response1.getObject());
+    assertEquals(null, fetchedCar);
+    assertEquals(null, fetchedCar1);
   }
 
   @Test
@@ -67,13 +68,13 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(customer.getCar()).getObject();
     customer.setParkingTicket(ticket);
-    Response response = parkingBoy.fetch(customer.getParkingTicket());
-    Response response1 = parkingBoy.fetch(customer.getParkingTicket());
+    Car fetchedCar = (Car) parkingBoy.fetch(customer.getParkingTicket()).getObject();
+    Car fetchedCar1 = (Car) parkingBoy.fetch(customer.getParkingTicket()).getObject();
     //then
-    assertEquals(customer.getCar(), response.getObject());
-    assertEquals(null, response1.getObject());
+    assertEquals(customer.getCar(), fetchedCar);
+    assertEquals(null, fetchedCar1);
   }
 
   @Test
@@ -86,7 +87,7 @@ class ParkingSystemTest {
     //when
     parkingBoy.setParkingLot(parkingLot);
     when(parkingLot.isFull()).thenReturn(true);
-    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(customer.getCar()).getObject();
     customer.setParkingTicket(ticket);
     //then
     assertEquals(null, customer.getParkingTicket());
@@ -102,7 +103,7 @@ class ParkingSystemTest {
     //when
     parkingBoy.setParkingLot(parkingLot);
     parkingBoy.park(customer.getCar());
-    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(customer.getCar()).getObject();
     //then
     assertEquals(null, ticket);
   }
@@ -115,7 +116,7 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(customer.getCar()).getObject();
     //then
     assertEquals(null, ticket);
   }
@@ -129,7 +130,7 @@ class ParkingSystemTest {
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
-    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    ParkingTicket ticket = (ParkingTicket) parkingBoy.park(customer.getCar()).getObject();
     customer.setParkingTicket(ticket);
     parkingBoy.fetch(customer.getParkingTicket());
     Response response1 = parkingBoy.fetch(customer.getParkingTicket());
@@ -151,4 +152,18 @@ class ParkingSystemTest {
     assertEquals(NO_TICKET, response.getMessage());
   }
 
+  @Test
+  public void should_full_parkingLot_message_when_park_car_give_full_parkingLot() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot = mock(ParkingLot.class);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    when(parkingLot.isFull()).thenReturn(true);
+    Response response = parkingBoy.park(customer.getCar());
+    //then
+    assertEquals(PARKING_LOT_IS_FULL, response.getMessage());
+  }
 }

@@ -1,18 +1,22 @@
 package com.thoughtworks.tdd;
 
 import static com.thoughtworks.tdd.Constant.NO_TICKET;
+import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 
 public class ParkingBoy {
   private ParkingLot parkingLot;
 
-  public ParkingTicket park(Car car) {
-    if (parkingLot.isFull() || parkingLot.getMap().containsValue(car) || car == null) {
-      return null;
+  public Response park(Car car) {
+    if (parkingLot.isFull()) {
+      return new Response(PARKING_LOT_IS_FULL, null);
+    }
+    if (parkingLot.getMap().containsValue(car) || car == null) {
+      return new Response("", null);
     }
     ParkingTicket ticket = new ParkingTicket();
     parkingLot.getMap().put(ticket, car);
-    return ticket;
+    return new Response("", ticket);
   }
 
   public Response fetch(ParkingTicket ticket) {
@@ -22,9 +26,9 @@ public class ParkingBoy {
     Car car = parkingLot.getMap().get(ticket);
     parkingLot.getMap().remove(ticket);
     if (car == null) {
-      return new Response(WRONG_TICKET,null);
+      return new Response(WRONG_TICKET, null);
     }
-    return new Response("",car);
+    return new Response("", car);
   }
 
   public void setParkingLot(ParkingLot parkingLot) {
