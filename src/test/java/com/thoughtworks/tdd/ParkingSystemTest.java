@@ -200,4 +200,29 @@ class ParkingSystemTest {
     //then
     assertNotNull(response.getObject());
   }
+
+  @Test
+  public void should_park_at_parkingLot3_when_park_car_give_three_different_capacity_parkingLots() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot1 = new ParkingLot(1);
+    ParkingLot parkingLot2 = new ParkingLot(2);
+    ParkingLot parkingLot3 = new ParkingLot(3);
+    List<ParkingLot> parkingLotList = new ArrayList<>();
+    parkingLotList.add(parkingLot1);
+    parkingLotList.add(parkingLot2);
+    parkingLotList.add(parkingLot3);
+    Manager manager = new Manager(parkingLotList);
+    SmartParkingBoy smartParkingBoy = new SmartParkingBoy();
+    List<ParkingBoy> parkingBoyList = new ArrayList<>();
+    parkingBoyList.add(smartParkingBoy);
+    manager.distribute(smartParkingBoy, parkingLotList);
+    //when
+    smartParkingBoy.park(customer.getCar());
+    //then
+    assertEquals(1, parkingLot3.getMap().size());
+  }
+
+
 }

@@ -40,6 +40,10 @@ public class ParkingBoy {
     return new Response("", car);
   }
 
+  public List<ParkingLot> getParkingLotList() {
+    return parkingLotList;
+  }
+
   public void setParkingLotList(List<ParkingLot> parkingLotList) {
     this.parkingLotList = parkingLotList;
   }

@@ -22,4 +22,8 @@ public class ParkingLot {
   public void setMap(Map<ParkingTicket, Car> map) {
     this.map = map;
   }
+
+  public int getCapacity() {
+    return capacity;
+  }
 }
