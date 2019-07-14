@@ -7,11 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.tdd.Constant.NO_TICKET;
-import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
-import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
+import static com.thoughtworks.tdd.Constant.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -205,7 +202,7 @@ class ParkingSystemTest {
   }
 
   @Test
-  public void should_park_at_parkingLot3_when_park_car_give_three_different_capacity_parkingLots() {
+  public void should_park_at_parkingLot3_when_smart_parkingBoy_park_car_give_three_different_capacity_parkingLots() {
     //give
     Customer customer = new Customer();
     customer.setCar(new Car());
@@ -228,7 +225,7 @@ class ParkingSystemTest {
   }
 
   @Test
-  public void should_park_at_parkingLot2_when_park_car_give_two_different_capacity_parkingLots() {
+  public void should_park_at_parkingLot2_when_super_smart_parikingBoy_park_car_give_two_different_capacity_parkingLots() {
     //give
     Customer customer = new Customer();
     customer.setCar(new Car());
@@ -260,23 +257,11 @@ class ParkingSystemTest {
     //give
     Customer customer = new Customer();
     customer.setCar(new Car());
-    List<ParkingLot> parkingLotList = expectParkingLotListByCount(4);
-    Manager manager = new Manager(parkingLotList);
-    ParkingBoy parkingBoy = new ParkingBoy();
-    SmartParkingBoy smartParkingBoy = new SmartParkingBoy();
-    SuperSmartParkingBoy superSmartParkingBoy = new SuperSmartParkingBoy();
-    List<ParkingBoy> parkingBoyList = new ArrayList<>();
-    parkingBoyList.add(parkingBoy);
-    parkingBoyList.add(smartParkingBoy);
-    parkingBoyList.add(superSmartParkingBoy);
-    manager.setParkingBoyList(parkingBoyList);
-    manager.distribute(parkingBoy, parkingLotList.subList(0, 1));
-    manager.distribute(smartParkingBoy, parkingLotList.subList(1, 2));
-    manager.distribute(superSmartParkingBoy, parkingLotList.subList(2, 3));
+    Manager manager = expectManagerWithParkingBoysAndParkingLots();
     //when
-    Response response = manager.distributeParkingBoyToPark(parkingBoy, customer);
+    Response response = manager.distributeParkingBoyToPark(manager.getParkingBoyList().get(0), customer);
     customer.setParkingTicket((ParkingTicket) response.getObject());
-    Response response1 = manager.distributeParkingBoyToFetch(smartParkingBoy, customer);
+    Response response1 = manager.distributeParkingBoyToFetch(manager.getParkingBoyList().get(1), customer);
     //then
     assertNotNull(response.getObject());
     assertNull(response1.getObject());
@@ -287,23 +272,11 @@ class ParkingSystemTest {
     //give
     Customer customer = new Customer();
     customer.setCar(new Car());
-    List<ParkingLot> parkingLotList = expectParkingLotListByCount(4);
-    Manager manager = new Manager(parkingLotList);
-    ParkingBoy parkingBoy = new ParkingBoy();
-    SmartParkingBoy smartParkingBoy = new SmartParkingBoy();
-    SuperSmartParkingBoy superSmartParkingBoy = new SuperSmartParkingBoy();
-    List<ParkingBoy> parkingBoyList = new ArrayList<>();
-    parkingBoyList.add(parkingBoy);
-    parkingBoyList.add(smartParkingBoy);
-    parkingBoyList.add(superSmartParkingBoy);
-    manager.setParkingBoyList(parkingBoyList);
-    manager.distribute(parkingBoy, parkingLotList.subList(0, 1));
-    manager.distribute(smartParkingBoy, parkingLotList.subList(1, 2));
-    manager.distribute(superSmartParkingBoy, parkingLotList.subList(2, 3));
+    Manager manager = expectManagerWithParkingBoysAndParkingLots();
     //when
-    Response response = manager.distributeParkingBoyToPark(parkingBoy, customer);
+    Response response = manager.distributeParkingBoyToPark(manager.getParkingBoyList().get(0), customer);
     customer.setParkingTicket((ParkingTicket) response.getObject());
-    Response response1 = manager.distributeParkingBoyToFetch(parkingBoy, customer);
+    Response response1 = manager.distributeParkingBoyToFetch(manager.getParkingBoyList().get(0), customer);
     //then
     assertNotNull(response.getObject());
     assertNotNull(response1.getObject());
@@ -314,6 +287,17 @@ class ParkingSystemTest {
     //give
     Customer customer = new Customer();
     customer.setCar(new Car());
+    Manager manager = expectManagerWithParkingBoysAndParkingLots();
+    //when
+    Response response = manager.distributeParkingBoyToPark(manager, customer);
+    customer.setParkingTicket((ParkingTicket) response.getObject());
+    Response response1 = manager.distributeParkingBoyToFetch(manager, customer);
+    //then
+    assertNotNull(response.getObject());
+    assertNotNull(response1.getObject());
+  }
+
+  private Manager expectManagerWithParkingBoysAndParkingLots() {
     List<ParkingLot> parkingLotList = expectParkingLotListByCount(4);
     Manager manager = new Manager(parkingLotList);
     ParkingBoy parkingBoy = new ParkingBoy();
@@ -327,13 +311,7 @@ class ParkingSystemTest {
     manager.distribute(parkingBoy, parkingLotList.subList(0, 1));
     manager.distribute(smartParkingBoy, parkingLotList.subList(1, 2));
     manager.distribute(superSmartParkingBoy, parkingLotList.subList(2, 3));
-    //when
-    Response response = manager.distributeParkingBoyToPark(manager, customer);
-    customer.setParkingTicket((ParkingTicket) response.getObject());
-    Response response1 = manager.distributeParkingBoyToFetch(manager, customer);
-    //then
-    assertNotNull(response.getObject());
-    assertNotNull(response1.getObject());
+    return manager;
   }
 
   private List<ParkingLot> expectParkingLotListByCount(int count) {

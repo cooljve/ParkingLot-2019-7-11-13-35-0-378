@@ -14,9 +14,7 @@ public class SmartParkingBoy extends ParkingBoy {
       return new Response("", null);
     }
     ParkingTicket ticket = new ParkingTicket();
-    getParkingLotList().sort((a, b) -> {
-      return (b.getCapacity() - b.getMap().size()) - (a.getCapacity()-a.getMap().size());
-    });
+    getParkingLotList().sort((a, b) -> (b.getCapacity() - b.getMap().size()) - (a.getCapacity()-a.getMap().size()));
     getParkingLotList().get(0).getMap().put(ticket, car);
     return new Response("", ticket);
   }

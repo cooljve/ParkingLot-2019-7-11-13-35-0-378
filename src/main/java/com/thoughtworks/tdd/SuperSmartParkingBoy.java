@@ -14,9 +14,7 @@ public class SuperSmartParkingBoy extends ParkingBoy {
       return new Response("", null);
     }
     ParkingTicket ticket = new ParkingTicket();
-    getParkingLotList().sort((a, b) -> {
-      return (int) (((double)b.getMap().size() / b.getCapacity()) -  ((double)a.getMap().size() / a.getCapacity()));
-    });
+    getParkingLotList().sort((a, b) -> (int) (((double)b.getMap().size() / b.getCapacity()) -  ((double)a.getMap().size() / a.getCapacity())));
     getParkingLotList().get(0).getMap().put(ticket, car);
     return new Response("", ticket);
   }

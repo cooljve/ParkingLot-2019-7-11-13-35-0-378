@@ -6,9 +6,6 @@ public class Manager extends ParkingBoy {
   private List<ParkingBoy> parkingBoyList;
   private List<ParkingLot> parkingLotList;
 
-  public Manager() {
-  }
-
   public Manager(List<ParkingLot> parkingLotList) {
     this.parkingLotList = parkingLotList;
   }
@@ -29,7 +26,7 @@ public class Manager extends ParkingBoy {
     this.parkingBoyList = parkingBoyList;
   }
 
-  public Response park(Car car){
+  public Response park(Car car) {
     return super.park(car);
   }
 
@@ -39,5 +36,9 @@ public class Manager extends ParkingBoy {
 
   public void setParkingLotList(List<ParkingLot> parkingLotList) {
     this.parkingLotList = parkingLotList;
+  }
+
+  public List<ParkingBoy> getParkingBoyList() {
+    return parkingBoyList;
   }
 }
