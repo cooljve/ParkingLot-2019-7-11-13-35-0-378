@@ -57,4 +57,22 @@ class ParkingSystemTest {
     assertEquals(null, fetchedCar1);
   }
 
+  @Test
+  public void should_null_when_fetch_car_give_used_ticket() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot = new ParkingLot();
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    customer.setParkingTicket(ticket);
+    Car fetchedCar = parkingBoy.fetch(customer.getParkingTicket());
+    Car fetchedCar1 = parkingBoy.fetch(customer.getParkingTicket());
+    //then
+    assertEquals(customer.getCar(), fetchedCar);
+    assertEquals(null, fetchedCar1);
+  }
+
 }
