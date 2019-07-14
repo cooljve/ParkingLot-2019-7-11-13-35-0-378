@@ -2,10 +2,9 @@ package com.thoughtworks.tdd;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ParkingSystemTest {
 
@@ -13,7 +12,7 @@ class ParkingSystemTest {
   public void should_return_car_when_park_car_fetch_car() {
     //give
     Car car = new Car();
-    ParkingLot parkingLot = new ParkingLot();
+    ParkingLot parkingLot = new ParkingLot(10);
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
@@ -28,7 +27,7 @@ class ParkingSystemTest {
     //give
     Car firstCar = new Car();
     Car secondCar = new Car();
-    ParkingLot parkingLot = new ParkingLot();
+    ParkingLot parkingLot = new ParkingLot(10);
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
@@ -46,7 +45,7 @@ class ParkingSystemTest {
     //give
     Customer customer = new Customer();
     customer.setParkingTicket(new ParkingTicket());
-    ParkingLot parkingLot = new ParkingLot();
+    ParkingLot parkingLot = new ParkingLot(10);
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
@@ -62,7 +61,7 @@ class ParkingSystemTest {
     //give
     Customer customer = new Customer();
     customer.setCar(new Car());
-    ParkingLot parkingLot = new ParkingLot();
+    ParkingLot parkingLot = new ParkingLot(10);
     ParkingBoy parkingBoy = new ParkingBoy();
     //when
     parkingBoy.setParkingLot(parkingLot);
@@ -73,6 +72,22 @@ class ParkingSystemTest {
     //then
     assertEquals(customer.getCar(), fetchedCar);
     assertEquals(null, fetchedCar1);
+  }
+
+  @Test
+  public void should_null_when_park_car_give_full_parkingLot() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot = mock(ParkingLot.class);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    when(parkingLot.isFull()).thenReturn(true);
+    ParkingTicket ticket = parkingBoy.park(customer.getCar());
+    customer.setParkingTicket(ticket);
+    //then
+    assertEquals(null, customer.getParkingTicket());
   }
 
 }

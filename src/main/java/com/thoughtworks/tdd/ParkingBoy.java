@@ -4,6 +4,9 @@ public class ParkingBoy {
   private ParkingLot parkingLot;
 
   public ParkingTicket park(Car car) {
+    if (parkingLot.isFull()) {
+      return null;
+    }
     ParkingTicket ticket = new ParkingTicket();
     parkingLot.getMap().put(ticket, car);
     return ticket;
