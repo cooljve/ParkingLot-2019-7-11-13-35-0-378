@@ -7,7 +7,7 @@ import static com.thoughtworks.tdd.Constant.NO_TICKET;
 import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 
-public class ParkingBoy {
+public class ParkingBoy implements ParkingSystem{
   private List<ParkingLot> parkingLotList;
 
   public Response park(Car car) {
