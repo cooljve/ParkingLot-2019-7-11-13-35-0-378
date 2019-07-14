@@ -1,5 +1,6 @@
 package com.thoughtworks.tdd;
 
+import static com.thoughtworks.tdd.Constant.NO_TICKET;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 
 public class ParkingBoy {
@@ -15,6 +16,9 @@ public class ParkingBoy {
   }
 
   public Response fetch(ParkingTicket ticket) {
+    if (ticket == null) {
+      return new Response(NO_TICKET, null);
+    }
     Car car = parkingLot.getMap().get(ticket);
     parkingLot.getMap().remove(ticket);
     if (car == null) {

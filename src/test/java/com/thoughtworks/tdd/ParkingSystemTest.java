@@ -2,6 +2,7 @@ package com.thoughtworks.tdd;
 
 import org.junit.jupiter.api.Test;
 
+import static com.thoughtworks.tdd.Constant.NO_TICKET;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -134,6 +135,20 @@ class ParkingSystemTest {
     Response response1 = parkingBoy.fetch(customer.getParkingTicket());
     //then
     assertEquals(WRONG_TICKET, response1.getMessage());
+  }
+
+  @Test
+  public void should_return_error_string_when_fetch_car_give_no_ticket() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot = new ParkingLot(10);
+    ParkingBoy parkingBoy = new ParkingBoy();
+    //when
+    parkingBoy.setParkingLot(parkingLot);
+    Response response = parkingBoy.fetch(null);
+    //then
+    assertEquals(NO_TICKET, response.getMessage());
   }
 
 }
