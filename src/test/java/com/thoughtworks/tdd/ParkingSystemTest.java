@@ -3,12 +3,15 @@ package com.thoughtworks.tdd;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.tdd.Constant.NO_TICKET;
 import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 import static com.thoughtworks.tdd.Constant.WRONG_TICKET;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -222,6 +225,42 @@ class ParkingSystemTest {
     smartParkingBoy.park(customer.getCar());
     //then
     assertEquals(1, parkingLot3.getMap().size());
+  }
+
+  @Test
+  public void should_park_at_parkingLot2_when_park_car_give_two_different_capacity_parkingLots() {
+    //give
+    Customer customer = new Customer();
+    customer.setCar(new Car());
+    ParkingLot parkingLot1 = mock(ParkingLot.class);
+    ParkingLot parkingLot2 = mock(ParkingLot.class);
+    List<ParkingLot> parkingLotList = new ArrayList<>();
+    parkingLotList.add(parkingLot1);
+    parkingLotList.add(parkingLot2);
+    Manager manager = new Manager(parkingLotList);
+    SuperSmartParkingBoy superSmartParkingBoy = new SuperSmartParkingBoy();
+    List<ParkingBoy> parkingBoyList = new ArrayList<>();
+    parkingBoyList.add(superSmartParkingBoy);
+    manager.distribute(superSmartParkingBoy, parkingLotList);
+    Map<ParkingTicket, Car> map1 = expectMapWithSize(6);
+    Map<ParkingTicket, Car> map2 = expectMapWithSize(10);
+    //when
+    when(parkingLot1.getMap()).thenReturn(map1);
+    when(parkingLot1.getCapacity()).thenReturn(10);
+    when(parkingLot2.getMap()).thenReturn(map2);
+    when(parkingLot2.getCapacity()).thenReturn(20);
+    superSmartParkingBoy.park(customer.getCar());
+    //then
+    assertEquals(7, parkingLot1.getMap().size());
+    assertEquals(10, parkingLot2.getMap().size());
+  }
+
+  private Map<ParkingTicket, Car> expectMapWithSize(int i2) {
+    Map<ParkingTicket, Car> map1 = new HashMap<>();
+    for (int i = 0; i < i2; i++) {
+      map1.put(new ParkingTicket(), null);
+    }
+    return map1;
   }
 
 
