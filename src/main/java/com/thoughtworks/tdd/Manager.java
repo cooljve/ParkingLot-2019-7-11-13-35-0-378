@@ -2,7 +2,7 @@ package com.thoughtworks.tdd;
 
 import java.util.List;
 
-public class Manager extends ParkingBoy {
+public class Manager {
   private List<ParkingBoy> parkingBoyList;
   private List<ParkingLot> parkingLotList;
 
@@ -10,17 +10,6 @@ public class Manager extends ParkingBoy {
     this.parkingLotList = parkingLotList;
   }
 
-  public void distribute(ParkingBoy boy, List<ParkingLot> parkingLots) {
-    boy.setParkingLotList(parkingLots);
-  }
-
-  public Response distributeParkingBoyToPark(ParkingBoy boy, Customer customer) {
-    return boy.park(customer.getCar());
-  }
-
-  public Response distributeParkingBoyToFetch(ParkingBoy boy, Customer customer) {
-    return boy.fetch(customer.getParkingTicket());
-  }
 
   public void setParkingBoyList(List<ParkingBoy> parkingBoyList) {
     this.parkingBoyList = parkingBoyList;

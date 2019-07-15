@@ -1,21 +1,20 @@
 package com.thoughtworks.tdd;
 
+import com.thoughtworks.tdd.exception.NOT_ENOUGH_POSITION_EXCEPTION;
+
 import java.util.stream.Collectors;
 
 import static com.thoughtworks.tdd.Constant.PARKING_LOT_IS_FULL;
 
-public class SmartParkingBoy extends ParkingBoy {
-  public Response park(Car car) {
-    setParkingLotList(getParkingLotList().stream().filter(x -> !x.isFull()).collect(Collectors.toList()));
-    if (getParkingLotList().size() == 0) {
-      return new Response(PARKING_LOT_IS_FULL, null);
-    }
-    if (getParkingLotList().get(0).getMap().containsValue(car) || car == null) {
-      return new Response("", null);
+public class SmartParkingBoy extends Parker {
+  public ParkingTicket park(Car car) {
+    parkingLotList = parkingLotList.stream().filter(x -> !x.isFull()).collect(Collectors.toList());
+    if (parkingLotList.size() == 0) {
+      throw new NOT_ENOUGH_POSITION_EXCEPTION();
     }
     ParkingTicket ticket = new ParkingTicket();
-    getParkingLotList().sort((a, b) -> (b.getCapacity() - b.getMap().size()) - (a.getCapacity()-a.getMap().size()));
-    getParkingLotList().get(0).getMap().put(ticket, car);
-    return new Response("", ticket);
+    parkingLotList.sort((a, b) -> b.getAvailable() - a.getAvailable());
+    parkingLotList.get(0).getMap().put(ticket, car);
+    return ticket;
   }
 }

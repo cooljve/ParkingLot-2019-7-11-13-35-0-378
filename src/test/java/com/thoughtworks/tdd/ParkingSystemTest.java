@@ -330,6 +330,4 @@ class ParkingSystemTest {
     }
     return map1;
   }
-
-
 }
